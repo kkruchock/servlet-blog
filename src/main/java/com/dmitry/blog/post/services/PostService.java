@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface PostService {
 
-    void createPost(String title, String text);
+    void createPost(String title, String text, UUID authorId);
 
     void updatePost(UUID id, String title, String text);
 

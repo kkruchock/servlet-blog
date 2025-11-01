@@ -20,8 +20,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void createPost(String title, String text) {
-        Post post = new Post(title, text);
+    public void createPost(String title, String text, UUID authorId) {
+        Post post = new Post(title, text, authorId);
         postRepository.create(post);
         log.info("Created new post with title: {}", title);
     }

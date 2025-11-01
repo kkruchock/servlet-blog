@@ -10,24 +10,27 @@ public class Post {
     private String text;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private UUID authorId;
 
     public Post() {
     }
 
-    public Post(String title, String text) {
+    public Post(String title, String text, UUID authorId) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.text = text;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.authorId = authorId;
     }
 
-    public Post(UUID id, String title, String text, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Post(UUID id, String title, String text, LocalDateTime createdAt, LocalDateTime updatedAt, UUID authorId) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.authorId = authorId;
     }
 
     public UUID getId() {
@@ -50,6 +53,10 @@ public class Post {
     public void setText(String text) {
         this.text = text;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public UUID getAuthorId() {
+        return authorId;
     }
 
     public LocalDateTime getCreatedAt() {

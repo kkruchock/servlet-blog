@@ -14,24 +14,30 @@
   String savedTitle = (String) request.getAttribute("savedTitle");
   String savedText = (String) request.getAttribute("savedText");
 %>
-
-<h1><%= isEdit ? "Редактировать" : "Создать" %></h1>
+<html>
+<head>
+  <title><%= isEdit ? "Редактировать пост" : "Создать пост" %></title>
+</head>
+<body>
+<h1><%= isEdit ? "Редактировать пост" : "Создать пост" %></h1>
 
 <% if (error != null) { %>
-    <p style="color: red;"><%= error %></p>
+<p style="color: red;"><%= error %></p>
 <% } %>
 
-<form method="post">
+<form method="post" action="<%= isEdit ? "/blog/edit" : "/blog/create" %>">
   <% if (isEdit) { %>
-      <input type="hidden" name="id" value="<%= post.getId() %>">
+  <input type="hidden" name="id" value="<%= post.getId() %>">
   <% } %>
 
   Заголовок:<br>
-  <input type="text" name="title" value="<%= isEdit ? post.getTitle() : (savedTitle != null ? savedTitle : "") %>"><br>
+  <input type="text" name="title" value="<%= isEdit ? post.getTitle() : (savedTitle != null ? savedTitle : "") %>" style="width: 300px;"><br><br>
 
   Текст:<br>
-  <textarea name="text"><%= isEdit ? post.getText() : (savedText != null ? savedText : "") %></textarea><br>
+  <textarea name="text" rows="10" style="width: 500px;"><%= isEdit ? post.getText() : (savedText != null ? savedText : "") %></textarea><br><br>
 
-  <button><%= isEdit ? "Обновить" : "Создать" %></button>
+  <button type="submit"><%= isEdit ? "Обновить" : "Создать" %></button>
   <a href="./">Отмена</a>
 </form>
+</body>
+</html>

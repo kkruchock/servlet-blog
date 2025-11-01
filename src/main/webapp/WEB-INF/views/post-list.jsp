@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.dmitry.blog.post.models.Post" %>
+<%@ page import="com.dmitry.blog.user.models.User" %>
 <%@ page import="java.util.List" %>
 <%@ taglib prefix="blog" tagdir="/WEB-INF/tags" %>
 <%
@@ -14,19 +15,54 @@
     int currentPage = (Integer) request.getAttribute("currentPage");
     int totalPages = (Integer) request.getAttribute("totalPages");
     String sort = request.getAttribute("sort").toString();
+    User currentUser = (User) request.getAttribute("currentUser");
 %>
-
+<html>
+<head>
+    <title>Блог</title>
+</head>
+<body>
 <h1>Блог</h1>
-<a href="create">Новый пост</a>
+
+<%-- Блок авторизации --%>
+<div style="float: right;">
+    <% if (currentUser != null) { %>
+    Привет, <%= currentUser.getEmail() %>!
+    <form action="/blog/logout" method="post" style="display: inline;">
+        <button type="submit">Выйти</button>
+    </form>
+    <% } else { %>
+    <a href="/blog/login">Войти</a> |
+    <a href="/blog/register">Регистрация</a>
+    <% } %>
+</div>
+
+<%-- Кнопка создания поста только для авторизованных --%>
+<% if (currentUser != null) { %>
+<a href="/blog/create">Новый пост</a>
+<% } %>
 
 <blog:sort-buttons currentPage="<%= currentPage %>" sort="<%= sort %>"/>
 
 <% for (Post post : posts) { %>
+<div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
     <h3><%= post.getTitle() %></h3>
     <p><%= post.getText() %></p>
-    <blog:date-format date="<%= post.getCreatedAt() %>"/>
-    <blog:post-actions postId="<%= post.getId().toString() %>" createdAt="<%= post.getCreatedAt() %>"/>
-    <hr>
+    <small>
+        <blog:date-format date="<%= post.getCreatedAt() %>"/>
+    </small>
+    <br>
+
+    <%-- Проверка авторства прямо в JSP --%>
+    <% if (currentUser != null && post.getAuthorId().equals(currentUser.getId())) { %>
+    <blog:post-actions
+            postId="<%= post.getId().toString() %>"
+            createdAt="<%= post.getCreatedAt() %>"
+    />
+    <% } %>
+</div>
 <% } %>
 
 <blog:pagination currentPage="<%= currentPage %>" totalPages="<%= totalPages %>"/>
+</body>
+</html>
